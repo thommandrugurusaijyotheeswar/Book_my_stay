@@ -1,40 +1,38 @@
-📘 README – Use Case 6: Reservation Confirmation & Room Allocation
 📌 Description
 
-This use case implements the final booking confirmation system, where requests from the queue are processed and rooms are allocated safely.
+This use case adds optional services (like breakfast, pickup, extra bed) to an existing reservation.
 
-It ensures:
+It enhances the booking system without modifying:
 
-No double booking
-Unique room assignment
-Consistent inventory updates
+Room allocation
+Inventory logic
 🎯 Goal
-Confirm booking requests from queue
-Assign unique room IDs
-Prevent duplicate room allocation
-Keep inventory synchronized
+Attach multiple services to a reservation
+Maintain flexibility and extensibility
+Calculate additional service cost
 👤 Actors
-BookingService – processes requests and allocates rooms
-RoomInventory – manages availability
+Guest – selects add-on services
+AddOnService – represents a service
+AddOnServiceManager – manages services
 🔄 Flow of Execution
-Booking request is taken from queue (FIFO)
-System checks room availability
-Unique room ID is generated
-Room ID stored in a Set (no duplicates)
-Inventory is reduced immediately
-Booking is confirmed or rejected
+Reservation already exists
+Guest selects add-on services
+Services are stored in a list
+List is mapped to reservation ID
+Services are displayed
+Total cost is calculated
 🧠 Key Concepts Used
-Queue (FIFO)
-Processes requests in order
-Set
-Ensures unique room IDs
-HashMap
-Maps room type → allocated rooms
-Double Booking Prevention
-No room ID reused
-Atomic Operation
-Allocation + inventory update together
+Map + List
+Reservation → multiple services
+One-to-Many Relationship
+One booking → many services
+Composition
+Services attached to reservation
+Separation of Concerns
+Add-ons ≠ booking logic
+Cost Aggregation
+Total service cost calculated separately
 🛠️ Technologies Used
 Core Java
 OOP Concepts
-Queue, HashMap, HashSet
+HashMap & ArrayList
