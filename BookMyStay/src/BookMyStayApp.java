@@ -1,99 +1,125 @@
-public class BookMyStayApp {
-    /**
-     * UseCase1HotelBookingApp
-     *
-     * This class represents the entry point of the Hotel Booking Management System.
-     * It demonstrates the basic structure of a Java application, including the
-     * main() method and console output.
-     *
-     * The application prints a welcome message along with the system name and version.
-     *
-     * @author GURU
-     * @version 1.0
-     */
-
-
-        /**
-         * Main method - Entry point of the application
-         *
-         * @param args Command line arguments
-         */
 import java.util.HashMap;
 import java.util.Map;
 
-    /**
-     * UseCase3InventorySetup
-     *
-     * This program demonstrates centralized room inventory management
-     * using HashMap. It replaces scattered variables with a single
-     * source of truth for room availability.
-     *
-     * @author GURU
-     * @version 3.1
-     */
+/**
+ * UseCase4RoomSearch
+ *
+ * This program demonstrates read-only room search functionality.
+ * It displays only available rooms without modifying inventory.
+ *
+ * @author GURU
+ * @version 4.0
+ */
 
-// Inventory Class (Encapsulates all inventory logic)
-    class RoomInventory {
+// Abstract Room Class
+abstract class Room {
+    protected String type;
+    protected int beds;
+    protected double price;
 
-        private Map<String, Integer> inventory;
+    public Room(String type, int beds, double price) {
+        this.type = type;
+        this.beds = beds;
+        this.price = price;
+    }
 
-        // Constructor to initialize inventory
-        public RoomInventory() {
-            inventory = new HashMap<>();
+    public void displayDetails() {
+        System.out.println("Room Type: " + type);
+        System.out.println("Beds: " + beds);
+        System.out.println("Price: ₹" + price);
+    }
 
-            // Initial room availability
-            inventory.put("Single Room", 5);
-            inventory.put("Double Room", 3);
-            inventory.put("Suite Room", 2);
-        }
+    public String getType() {
+        return type;
+    }
+}
 
-        // Method to get availability of a room type
-        public int getAvailability(String roomType) {
-            return inventory.getOrDefault(roomType, 0);
-        }
+// Concrete Room Classes
+class SingleRoom extends Room {
+    public SingleRoom() {
+        super("Single Room", 1, 1500);
+    }
+}
 
-        // Method to update availability (controlled update)
-        public void updateAvailability(String roomType, int count) {
-            if (inventory.containsKey(roomType)) {
-                inventory.put(roomType, count);
-            } else {
-                System.out.println("Room type not found!");
+class DoubleRoom extends Room {
+    public DoubleRoom() {
+        super("Double Room", 2, 2500);
+    }
+}
+
+class SuiteRoom extends Room {
+    public SuiteRoom() {
+        super("Suite Room", 3, 5000);
+    }
+}
+
+// Inventory Class (Read-only access)
+class RoomInventory {
+    private Map<String, Integer> inventory = new HashMap<>();
+
+    public RoomInventory() {
+        inventory.put("Single Room", 5);
+        inventory.put("Double Room", 0); // unavailable
+        inventory.put("Suite Room", 2);
+    }
+
+    // Read-only method
+    public int getAvailability(String roomType) {
+        return inventory.getOrDefault(roomType, 0);
+    }
+}
+
+// Search Service Class
+class RoomSearchService {
+
+    private RoomInventory inventory;
+
+    public RoomSearchService(RoomInventory inventory) {
+        this.inventory = inventory;
+    }
+
+    // Search available rooms (read-only)
+    public void searchAvailableRooms(Room[] rooms) {
+        System.out.println("------ Available Rooms ------");
+
+        for (Room room : rooms) {
+            int available = inventory.getAvailability(room.getType());
+
+            // Filter only available rooms
+            if (available > 0) {
+                room.displayDetails();
+                System.out.println("Available: " + available);
+                System.out.println();
             }
         }
-
-        // Method to display full inventory
-        public void displayInventory() {
-            System.out.println("------ Current Room Inventory ------");
-            for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
-                System.out.println(entry.getKey() + " : " + entry.getValue());
-            }
-        }
     }
+}
 
-    // Main Class
-    public class UseCase3InventorySetup {
+// Main Class
+public class BookMyStayApp {
 
-        public static void main(String[] args) {
+    public static void main(String[] args) {
 
-            System.out.println("=====================================");
-            System.out.println("   Book My Stay App - Version 3.1");
-            System.out.println("=====================================\n");
+        System.out.println("=====================================");
+        System.out.println("   Book My Stay App - Version 4.0");
+        System.out.println("=====================================\n");
 
-            // Initialize inventory
-            RoomInventory inventory = new RoomInventory();
+        // Initialize inventory
+        RoomInventory inventory = new RoomInventory();
 
-            // Display initial inventory
-            inventory.displayInventory();
+        // Create room objects
+        Room[] rooms = {
+                new SingleRoom(),
+                new DoubleRoom(),
+                new SuiteRoom()
+        };
 
-            // Example: Update availability
-            System.out.println("\nUpdating availability...\n");
-            inventory.updateAvailability("Single Room", 4);
+        // Search service
+        RoomSearchService searchService = new RoomSearchService(inventory);
 
-            // Display updated inventory
-            inventory.displayInventory();
+        // Perform search (read-only)
+        searchService.searchAvailableRooms(rooms);
 
-            System.out.println("\nApplication executed successfully.");
-        }
+        System.out.println("Search completed successfully.");
     }
-    }
-
+}
