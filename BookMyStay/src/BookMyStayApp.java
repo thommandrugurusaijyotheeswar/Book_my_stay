@@ -20,14 +20,36 @@ public class BookMyStayApp {
          */
         public static void main(String[] args) {
 
-            // Printing welcome message
             System.out.println("=====================================");
-            System.out.println("   Welcome to Book My Stay App");
-            System.out.println("   Hotel Booking System v1.0");
-            System.out.println("=====================================");
+            System.out.println("   Book My Stay App - Version 2.1");
+            System.out.println("=====================================\n");
 
-            // Application ends here
-            System.out.println("Application started successfully.");
+            // Creating room objects (Polymorphism)
+            Room single = new SingleRoom();
+            Room doubleRoom = new DoubleRoom();
+            Room suite = new SuiteRoom();
+
+            // Static availability variables
+            int singleAvailable = 5;
+            int doubleAvailable = 3;
+            int suiteAvailable = 2;
+
+            // Display Single Room
+            System.out.println("----- Single Room -----");
+            single.displayDetails();
+            System.out.println("Available: " + singleAvailable + "\n");
+
+            // Display Double Room
+            System.out.println("----- Double Room -----");
+            doubleRoom.displayDetails();
+            System.out.println("Available: " + doubleAvailable + "\n");
+
+            // Display Suite Room
+            System.out.println("----- Suite Room -----");
+            suite.displayDetails();
+            System.out.println("Available: " + suiteAvailable + "\n");
+
+            System.out.println("Application executed successfully.");
         }
     }
 
